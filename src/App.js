@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 const initialFriends = [
   {
@@ -21,14 +21,30 @@ const initialFriends = [
   },
 ];
 
+function Button({ children, onClick }) {
+  return (
+    <button className="button" onClick={onClick}>
+      {children}
+    </button>
+  );
+}
 export default function App() {
+  const [showFriends, setShowFriends] = useState(false);
+
+  function handleShowFriends() {
+    setShowFriends((show) => !show);
+  }
+
   return (
     <div className="app">
       <div className="sidebar">
         <FriendList />
-        <FormAddFriends />
-        <Button>Add Friend</Button>
+        {showFriends && <FormAddFriends />}
+        <Button onClick={handleShowFriends}>
+          {showFriends ? "Close" : "Add Friend"}
+        </Button>
       </div>
+      <FormSplitBill />
     </div>
   );
 }
@@ -37,7 +53,7 @@ function FriendList() {
   const friends = initialFriends;
 
   return (
-    <ul>
+    <ul key={friends.id}>
       {friends.map((friend) => (
         <Friend friend={friend} />
       ))}
@@ -47,7 +63,7 @@ function FriendList() {
 
 function Friend({ friend }) {
   return (
-    <li>
+    <li key={friend.id}>
       <img src={friend.image} alt={friend.name} />
       <h2>{friend.name}</h2>
 
@@ -71,18 +87,61 @@ function Friend({ friend }) {
   );
 }
 
-function Button({ children }) {
-  return <button className="button">{children}</button>;
-}
-
 function FormAddFriends() {
+  const [name, setName] = useState("");
+  const [image, setImage] = useState("https://i.pravatar.cc/48");
+
+  function handleAddFriend(e) {
+    e.preventDefault();
+
+    const newFriend = {
+      id: crypto.randomUUID(),
+      name,
+      balance: 0,
+      image,
+    };
+
+    console.log(newFriend);
+  }
   return (
-    <form className="form-add-friend">
+    <form className="form-add-friend" onSubmit={handleAddFriend}>
       <label>🧍‍♂️ Friend Name</label>
-      <input type="text" />
+      <input
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
 
       <label>📷 Image URL </label>
+      <input
+        type="text"
+        value={image}
+        onChange={(e) => setImage(e.target.value)}
+      />
+    </form>
+  );
+}
+
+function FormSplitBill() {
+  return (
+    <form className="form-split-bill">
+      <h2>Split the bill with X</h2>
+
+      <label>💰 Total Bill </label>
       <input type="text" />
+
+      <label>👨‍💼 Your Expense </label>
+      <input type="text" />
+
+      <label>👫 X's Bill </label>
+      <input type="text" disabled />
+
+      <label> 🤑 Who's paying </label>
+      <select name="" id="">
+        <option value="you">You</option>
+        <option value="friend">X</option>
+      </select>
+      <Button>Split Bill</Button>
     </form>
   );
 }
