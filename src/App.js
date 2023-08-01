@@ -26,6 +26,8 @@ export default function App() {
     <div className="app">
       <div className="sidebar">
         <FriendList />
+        <FormAddFriends />
+        <Button>Add Friend</Button>
       </div>
     </div>
   );
@@ -36,9 +38,51 @@ function FriendList() {
 
   return (
     <ul>
-      {friends.map((friends) => (
-        <li>{friends.name}</li>
+      {friends.map((friend) => (
+        <Friend friend={friend} />
       ))}
     </ul>
+  );
+}
+
+function Friend({ friend }) {
+  return (
+    <li>
+      <img src={friend.image} alt={friend.name} />
+      <h2>{friend.name}</h2>
+
+      {friend.balance < 0 && (
+        <p className="red">
+          you own {friend.name} ${Math.abs(friend.balance)}
+        </p>
+      )}
+      {friend.balance > 0 && (
+        <p className="green">
+          you own {friend.name} ${Math.abs(friend.balance)}
+        </p>
+      )}
+      {friend.balance === 0 && (
+        <p>
+          you own {friend.name} ${Math.abs(friend.balance)}
+        </p>
+      )}
+      <Button>Select</Button>
+    </li>
+  );
+}
+
+function Button({ children }) {
+  return <button className="button">{children}</button>;
+}
+
+function FormAddFriends() {
+  return (
+    <form className="form-add-friend">
+      <label>🧍‍♂️ Friend Name</label>
+      <input type="text" />
+
+      <label>📷 Image URL </label>
+      <input type="text" />
+    </form>
   );
 }
