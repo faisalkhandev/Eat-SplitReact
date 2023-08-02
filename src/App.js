@@ -29,17 +29,25 @@ function Button({ children, onClick }) {
   );
 }
 export default function App() {
+  const [friends, setFriends] = useState(initialFriends);
   const [showFriends, setShowFriends] = useState(false);
 
   function handleShowFriends() {
     setShowFriends((show) => !show);
   }
 
+  function handleAddFriends(friend) {
+    setFriends((friends) => [...friends, friend]);
+    setShowFriends(false);
+  }
+
   return (
     <div className="app">
       <div className="sidebar">
-        <FriendList />
-        {showFriends && <FormAddFriends />}
+        <FriendList friends={friends} />
+
+        {showFriends && <FormAddFriends onAddFriend={handleAddFriends} />}
+
         <Button onClick={handleShowFriends}>
           {showFriends ? "Close" : "Add Friend"}
         </Button>
@@ -49,13 +57,11 @@ export default function App() {
   );
 }
 
-function FriendList() {
-  const friends = initialFriends;
-
+function FriendList({ friends }) {
   return (
     <ul key={friends.id}>
       {friends.map((friend) => (
-        <Friend friend={friend} />
+        <Friend friend={friend} key={friend.id} />
       ))}
     </ul>
   );
@@ -63,7 +69,7 @@ function FriendList() {
 
 function Friend({ friend }) {
   return (
-    <li key={friend.id}>
+    <li>
       <img src={friend.image} alt={friend.name} />
       <h2>{friend.name}</h2>
 
@@ -77,31 +83,36 @@ function Friend({ friend }) {
           you own {friend.name} ${Math.abs(friend.balance)}
         </p>
       )}
-      {friend.balance === 0 && (
-        <p>
-          you own {friend.name} ${Math.abs(friend.balance)}
-        </p>
-      )}
+      {friend.balance === 0 && <p>you both are even</p>}
       <Button>Select</Button>
     </li>
   );
 }
 
-function FormAddFriends() {
+function FormAddFriends({ onAddFriend }) {
   const [name, setName] = useState("");
   const [image, setImage] = useState("https://i.pravatar.cc/48");
 
   function handleAddFriend(e) {
     e.preventDefault();
 
+    if (!name || !image) {
+      alert("Bhai jan aap ne naam nahi likha. 😊");
+    }
+
+    const id = crypto.randomUUID();
+
     const newFriend = {
-      id: crypto.randomUUID(),
+      id,
       name,
+      image: `${image}?u=${id}`,
       balance: 0,
-      image,
     };
 
-    console.log(newFriend);
+    onAddFriend(newFriend);
+
+    setName("");
+    setImage(image);
   }
   return (
     <form className="form-add-friend" onSubmit={handleAddFriend}>
@@ -118,6 +129,7 @@ function FormAddFriends() {
         value={image}
         onChange={(e) => setImage(e.target.value)}
       />
+      <Button>Add Friend</Button>
     </form>
   );
 }
