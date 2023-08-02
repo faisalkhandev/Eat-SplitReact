@@ -25,6 +25,12 @@ body {
   justify-content: center;
 }
 
+#heading {
+  text-align: center;
+  font-size: 30px;
+  margin-bottom: 20px;
+}
+
 .app {
   min-height: 66vh;
   display: grid;

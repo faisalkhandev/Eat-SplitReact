@@ -3,19 +3,19 @@ import React, { useState } from "react";
 const initialFriends = [
   {
     id: 118836,
-    name: "Lulu Panju",
+    name: "Mark",
     image: "https://i.pravatar.cc/48?u=118836",
     balance: -7,
   },
   {
     id: 933372,
-    name: "Saleem",
+    name: "Elon",
     image: "https://i.pravatar.cc/48?u=933372",
     balance: 20,
   },
   {
     id: 499476,
-    name: "Hammad",
+    name: "Bill",
     image: "https://i.pravatar.cc/48?u=499476",
     balance: 0,
   },
@@ -61,26 +61,29 @@ export default function App() {
   }
 
   return (
-    <div className="app">
-      <div className="sidebar">
-        <FriendList
-          friends={friends}
-          onSelection={handleSelectFriend}
-          selectedFriend={selectedFriend}
-        />
+    <div>
+      <h3 id="heading">Eat and Split Bill 😋</h3>
+      <div className="app">
+        <div className="sidebar">
+          <FriendList
+            friends={friends}
+            onSelection={handleSelectFriend}
+            selectedFriend={selectedFriend}
+          />
 
-        {showFriends && <FormAddFriends onAddFriend={handleAddFriends} />}
+          {showFriends && <FormAddFriends onAddFriend={handleAddFriends} />}
 
-        <Button onClick={handleShowFriends}>
-          {showFriends ? "Close" : "Add Friend"}
-        </Button>
+          <Button onClick={handleShowFriends}>
+            {showFriends ? "Close" : "Add Friend"}
+          </Button>
+        </div>
+        {selectedFriend && (
+          <FormSplitBill
+            selectedFriend={selectedFriend}
+            onSplitBill={handleSplitBill}
+          />
+        )}
       </div>
-      {selectedFriend && (
-        <FormSplitBill
-          selectedFriend={selectedFriend}
-          onSplitBill={handleSplitBill}
-        />
-      )}
     </div>
   );
 }
