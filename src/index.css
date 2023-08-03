@@ -179,4 +179,7 @@ form h2 {
     display: flex;
     flex-direction: column;
   }
+  .form-split-bill {
+    margin-top: 25px;
+  }
 }
